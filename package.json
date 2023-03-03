@@ -1,0 +1,45 @@
+{
+  "name": "benn-jordan-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.282.0",
+    "@aws-sdk/s3-request-presigner": "^3.282.0",
+    "@radix-ui/react-collapsible": "^1.0.1",
+    "@radix-ui/react-switch": "^1.0.1",
+    "@shapes-org/node-id3": "^0.2.0",
+    "next": "^13.2.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.7.1",
+    "tailwind-merge": "^1.10.0",
+    "zod": "^3.20.6",
+    "zustand": "^4.3.5"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.21.1",
+    "@types/node": "^18.14.0",
+    "@types/prettier": "^2.7.2",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "autoprefixer": "^10.4.13",
+    "eslint": "^8.34.0",
+    "eslint-config-next": "^13.2.1",
+    "postcss": "^8.4.21",
+    "prettier": "^2.8.1",
+    "prettier-plugin-tailwindcss": "^0.2.1",
+    "tailwindcss": "^3.2.7",
+    "typescript": "^4.9.5"
+  },
+  "ct3aMetadata": {
+    "initVersion": "7.5.9"
+  }
+}
