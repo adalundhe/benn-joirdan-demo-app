@@ -28,7 +28,7 @@ export const FormStepDisplay = ({
             <div className='w-full flex flex-col items-center'>
                 {children}
             </div>
-            <div className='flex mt-4'>
+            <div className={previousButton ? 'grid grid-cols-2 mt-4' : 'flex'}>
                 {previousButton ?? null}
                 {nextButton}
             </div>
