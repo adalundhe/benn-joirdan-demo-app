@@ -8,7 +8,7 @@ import {
   UPLOAD_STATE
 } from '~/utils/store';
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-// import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
   FormStepDisplay,
   StepButton,
@@ -113,24 +113,23 @@ const Home: NextPage = () => {
   const mutation = api.submissions.submitSong.useMutation()
 
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
 
-    UPLOAD_STATE.UPLOADING && setFileUploadState(UPLOAD_STATE.UPLOADING);
+    UPLOAD_STATE.UPLOADING && setFileUploadState(UPLOAD_STATE.UPLOADING)
    
     if (STORAGE_MODE === "SERVERLESS" && songName && artistName && song){
       const timestamp = Date.now();
 
-      // const url = await getSignedUrl(
-      //   s3,
-      //   new PutObjectCommand({
-      //     Bucket: CLOUDFLARE_BUCKET_NAME,
-      //     Key: `${artistName}_${songName}_${timestamp}.mp3`.replaceAll(/\s+/g, '_'),
-      //   }),
-      //   {
-      //     expiresIn: 60 * 60 * 24 * 7, // 7d
-      //   }
-      // );
-      
+      const url = await getSignedUrl(
+        s3,
+        new PutObjectCommand({
+          Bucket: CLOUDFLARE_BUCKET_NAME,
+          Key: `${artistName}_${songName}_${timestamp}.mp3`.replaceAll(/\s+/g, '_'),
+        }),
+        {
+          expiresIn: 60 * 60 * 24 * 7, // 7d
+        }
+      );
 
       const reader = new FileReader();
 
@@ -144,21 +143,13 @@ const Home: NextPage = () => {
           
           if (result instanceof Buffer){
 
-            await s3.send(
-              new PutObjectCommand({
-                Bucket: CLOUDFLARE_BUCKET_NAME,
-                Key: `${artistName}_${songName}_${timestamp}.mp3`.replaceAll(/\s+/g, '_'),
-                Body: result
-              })
-            )
-
-            // await fetch(url, {
-            //   method: "PUT",
-            //   body: result,
-            //   headers: {
-            //     "Content-Type": "audio/mpeg"
-            //   }
-            // });
+            await fetch(url, {
+              method: "PUT",
+              body: result,
+              headers: {
+                "Content-Type": "audio/mpeg"
+              }
+            });
             
             UPLOAD_STATE.SUCCESS && setFileUploadState(UPLOAD_STATE.SUCCESS);
             FORM_STEPS.SUBMITTED && setCurrentFormStep(FORM_STEPS.SUBMITTED);
@@ -220,7 +211,7 @@ const Home: NextPage = () => {
                   className="w-full"
                   onSubmit={(event) => {
                     event.preventDefault()
-                    onSubmit()
+                    onSubmit().catch(err => err as Error)
 
                   }}
                 >
