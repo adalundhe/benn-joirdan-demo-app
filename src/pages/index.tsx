@@ -113,7 +113,7 @@ const Home: NextPage = () => {
   const mutation = api.submissions.submitSong.useMutation()
 
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
 
     UPLOAD_STATE.UPLOADING && setFileUploadState(UPLOAD_STATE.UPLOADING);
    
@@ -220,7 +220,7 @@ const Home: NextPage = () => {
                   className="w-full"
                   onSubmit={(event) => {
                     event.preventDefault()
-                    onSubmit().catch(err => err as Error)
+                    onSubmit()
 
                   }}
                 >
