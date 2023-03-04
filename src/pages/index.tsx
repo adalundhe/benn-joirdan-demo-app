@@ -37,25 +37,6 @@ type RuntimeConfig = {
   }
 }
 
-const { publicRuntimeConfig } = getConfig() as RuntimeConfig;
-
-const {
-  AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY,
-  CLOUDFLARE_ACCOUNT_ID,
-  CLOUDFLARE_BUCKET_NAME,
-  STORAGE_MODE
-} = publicRuntimeConfig;
-
-
-const s3 = new S3Client({
-  region: "auto",
-  credentials: {
-    accessKeyId: AWS_ACCESS_KEY_ID,
-    secretAccessKey: AWS_SECRET_ACCESS_KEY
-  },
-  endpoint: `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-});
 
 
 const Home: NextPage = () => {
@@ -114,6 +95,27 @@ const Home: NextPage = () => {
 
 
   const onSubmit = async () => {
+
+
+    const { publicRuntimeConfig } = getConfig() as RuntimeConfig;
+
+    const {
+      AWS_ACCESS_KEY_ID,
+      AWS_SECRET_ACCESS_KEY,
+      CLOUDFLARE_ACCOUNT_ID,
+      CLOUDFLARE_BUCKET_NAME,
+      STORAGE_MODE
+    } = publicRuntimeConfig;
+
+
+    const s3 = new S3Client({
+      region: "auto",
+      credentials: {
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY
+      },
+      endpoint: `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    });
 
     UPLOAD_STATE.UPLOADING && setFileUploadState(UPLOAD_STATE.UPLOADING);
    
