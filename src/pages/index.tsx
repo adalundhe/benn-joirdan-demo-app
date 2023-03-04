@@ -116,6 +116,7 @@ const Home: NextPage = () => {
   const onSubmit = async () => {
 
     UPLOAD_STATE.UPLOADING && setFileUploadState(UPLOAD_STATE.UPLOADING)
+    console.log('UPLOAD!', STORAGE_MODE, songName, artistName, song)
    
     if (STORAGE_MODE === "SERVERLESS" && songName && artistName && song){
 
