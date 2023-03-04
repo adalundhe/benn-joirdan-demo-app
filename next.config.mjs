@@ -26,7 +26,6 @@ const config = {
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
-  },
-  output: process.env.STORAGE_MODE === 'FILESYSTEM' ? 'standalone' : undefined,
+  }
 };
 export default config;

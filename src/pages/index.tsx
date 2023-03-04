@@ -153,9 +153,10 @@ const Home: NextPage = () => {
               }
             });
             
-            
             UPLOAD_STATE.SUCCESS && setFileUploadState(UPLOAD_STATE.SUCCESS);
             FORM_STEPS.SUBMITTED && setCurrentFormStep(FORM_STEPS.SUBMITTED);
+
+            console.log('DONE!')
 
           }
 
