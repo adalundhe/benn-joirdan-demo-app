@@ -37,6 +37,25 @@ type RuntimeConfig = {
   }
 }
 
+const { publicRuntimeConfig } = getConfig() as RuntimeConfig;
+
+const {
+  AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY,
+  CLOUDFLARE_ACCOUNT_ID,
+  CLOUDFLARE_BUCKET_NAME,
+  STORAGE_MODE
+} = publicRuntimeConfig;
+
+
+const s3 = new S3Client({
+  region: "auto",
+  credentials: {
+    accessKeyId: AWS_ACCESS_KEY_ID,
+    secretAccessKey: AWS_SECRET_ACCESS_KEY
+  },
+  endpoint: `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+});
 
 
 const Home: NextPage = () => {
@@ -96,42 +115,22 @@ const Home: NextPage = () => {
 
   const onSubmit = async () => {
 
-
-    const { publicRuntimeConfig } = getConfig() as RuntimeConfig;
-
-    const {
-      AWS_ACCESS_KEY_ID,
-      AWS_SECRET_ACCESS_KEY,
-      CLOUDFLARE_ACCOUNT_ID,
-      CLOUDFLARE_BUCKET_NAME,
-      STORAGE_MODE
-    } = publicRuntimeConfig;
-
-
-    const s3 = new S3Client({
-      region: "auto",
-      credentials: {
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY
-      },
-      endpoint: `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-    });
-
     UPLOAD_STATE.UPLOADING && setFileUploadState(UPLOAD_STATE.UPLOADING);
    
     if (STORAGE_MODE === "SERVERLESS" && songName && artistName && song){
       const timestamp = Date.now();
 
-      const url = await getSignedUrl(
-        s3,
-        new PutObjectCommand({
-          Bucket: CLOUDFLARE_BUCKET_NAME,
-          Key: `${artistName}_${songName}_${timestamp}.mp3`.replaceAll(/\s+/g, '_'),
-        }),
-        {
-          expiresIn: 60 * 60 * 24 * 7, // 7d
-        }
-      );
+      // const url = await getSignedUrl(
+      //   s3,
+      //   new PutObjectCommand({
+      //     Bucket: CLOUDFLARE_BUCKET_NAME,
+      //     Key: `${artistName}_${songName}_${timestamp}.mp3`.replaceAll(/\s+/g, '_'),
+      //   }),
+      //   {
+      //     expiresIn: 60 * 60 * 24 * 7, // 7d
+      //   }
+      // );
+      
 
       const reader = new FileReader();
 
@@ -145,13 +144,21 @@ const Home: NextPage = () => {
           
           if (result instanceof Buffer){
 
-            await fetch(url, {
-              method: "PUT",
-              body: result,
-              headers: {
-                "Content-Type": "audio/mpeg"
-              }
-            });
+            await s3.send(
+              new PutObjectCommand({
+                Bucket: CLOUDFLARE_BUCKET_NAME,
+                Key: `${artistName}_${songName}_${timestamp}.mp3`.replaceAll(/\s+/g, '_'),
+                Body: result
+              })
+            )
+
+            // await fetch(url, {
+            //   method: "PUT",
+            //   body: result,
+            //   headers: {
+            //     "Content-Type": "audio/mpeg"
+            //   }
+            // });
             
             UPLOAD_STATE.SUCCESS && setFileUploadState(UPLOAD_STATE.SUCCESS);
             FORM_STEPS.SUBMITTED && setCurrentFormStep(FORM_STEPS.SUBMITTED);
