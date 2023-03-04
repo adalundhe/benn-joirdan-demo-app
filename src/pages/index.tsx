@@ -135,7 +135,12 @@ const Home: NextPage = () => {
 
       const reader = new FileReader();
 
+
+      console.log('HERE!')
+
       reader.onload = async function() {
+
+        console.log('STARTING!')
 
         if (reader.result instanceof ArrayBuffer){
           const result = write({
