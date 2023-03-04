@@ -153,6 +153,9 @@ const Home: NextPage = () => {
               }
             });
             
+            
+            UPLOAD_STATE.SUCCESS && setFileUploadState(UPLOAD_STATE.SUCCESS);
+            FORM_STEPS.SUBMITTED && setCurrentFormStep(FORM_STEPS.SUBMITTED);
 
           }
 
@@ -179,18 +182,17 @@ const Home: NextPage = () => {
               artist: artistName
             },
             songFile: decoded
-          })
+          });
+
+          UPLOAD_STATE.SUCCESS && setFileUploadState(UPLOAD_STATE.SUCCESS);
+          FORM_STEPS.SUBMITTED && setCurrentFormStep(FORM_STEPS.SUBMITTED);
+
         }
-        
 
       }
       reader.readAsArrayBuffer(song);
 
-
     }
-    
-    UPLOAD_STATE.SUCCESS && setFileUploadState(UPLOAD_STATE.SUCCESS);
-    FORM_STEPS.SUBMITTED && setCurrentFormStep(FORM_STEPS.SUBMITTED);
 
   }
 
