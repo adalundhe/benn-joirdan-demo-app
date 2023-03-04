@@ -24,13 +24,16 @@ import { shallow } from 'zustand/shallow';
 import { MdOutlineLightMode, MdDarkMode} from 'react-icons/md';
 import { z } from 'zod';
 import { AiFillCheckCircle } from 'react-icons/ai';
+import { api } from "~/utils/api";
+
 
 type RuntimeConfig = {
   publicRuntimeConfig: {
     AWS_ACCESS_KEY_ID: string,
     AWS_SECRET_ACCESS_KEY: string,
     CLOUDFLARE_ACCOUNT_ID: string,
-    CLOUDFLARE_BUCKET_NAME: string
+    CLOUDFLARE_BUCKET_NAME: string,
+    STORAGE_MODE: "FILESYSTEM" | "SERVERLESS"
   }
 }
 
@@ -40,7 +43,8 @@ const {
   AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY,
   CLOUDFLARE_ACCOUNT_ID,
-  CLOUDFLARE_BUCKET_NAME
+  CLOUDFLARE_BUCKET_NAME,
+  STORAGE_MODE
 } = publicRuntimeConfig;
 
 
@@ -106,12 +110,15 @@ const Home: NextPage = () => {
     setFileUploadState: state.setFileUploadState
   }), []), shallow)
 
+  const mutation = api.submissions.submitSong.useMutation()
+
 
   const onSubmit = async () => {
-   
-    if (artistName && songName && song){
 
-      UPLOAD_STATE.UPLOADING && setFileUploadState(UPLOAD_STATE.UPLOADING)
+    UPLOAD_STATE.UPLOADING && setFileUploadState(UPLOAD_STATE.UPLOADING)
+   
+    if (STORAGE_MODE === "SERVERLESS" && songName && artistName && song){
+
 
       const timestamp = Date.now();
 
@@ -126,17 +133,15 @@ const Home: NextPage = () => {
         }
       );
 
-      const tags = {
-        title: songName,
-        artist: artistName
-      }
-
       const reader = new FileReader();
 
       reader.onload = async function() {
 
         if (reader.result instanceof ArrayBuffer){
-          const result = write(tags, reader.result);
+          const result = write({
+            title: songName,
+            artist: artistName
+          }, reader.result);
           
           if (result instanceof Buffer){
 
@@ -149,8 +154,6 @@ const Home: NextPage = () => {
             });
             
 
-            UPLOAD_STATE.SUCCESS && setFileUploadState(UPLOAD_STATE.SUCCESS);
-            FORM_STEPS.SUBMITTED && setCurrentFormStep(FORM_STEPS.SUBMITTED);
           }
 
         }
@@ -158,7 +161,36 @@ const Home: NextPage = () => {
 
       reader.readAsArrayBuffer(song);
 
+    } else if (songName && artistName && song) {
+
+
+      const reader = new FileReader();
+      const decoder =  new TextDecoder();
+
+      reader.onload = async function() {
+
+        if (reader.result instanceof ArrayBuffer){
+
+          const decoded = await Promise.resolve(decoder.decode(reader.result))
+
+          await mutation.mutateAsync({
+            tags: {
+              title: songName,
+              artist: artistName
+            },
+            songFile: decoded
+          })
+        }
+        
+
+      }
+      reader.readAsArrayBuffer(song);
+
+
     }
+    
+    UPLOAD_STATE.SUCCESS && setFileUploadState(UPLOAD_STATE.SUCCESS);
+    FORM_STEPS.SUBMITTED && setCurrentFormStep(FORM_STEPS.SUBMITTED);
 
   }
 

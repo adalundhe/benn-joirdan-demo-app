@@ -5,6 +5,7 @@ import { z } from "zod";
  * built with invalid env vars.
  */
 const server = z.object({
+  SUBMISSION_STORAGE_PATH: z.string(),
   NODE_ENV: z.enum(["development", "test", "production"]),
 });
 
@@ -22,6 +23,7 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
+  SUBMISSION_STORAGE_PATH: process.env.SUBMISSION_STORAGE_PATH ?? "./",
   NODE_ENV: process.env.NODE_ENV ?? "development"
 };
 

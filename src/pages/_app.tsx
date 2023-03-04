@@ -1,5 +1,6 @@
 import { type AppType } from "next/app";
 
+import { api } from "~/utils/api";
 import "~/styles/globals.css";
 
 const SongSubmissionApp: AppType = ({
@@ -11,4 +12,4 @@ const SongSubmissionApp: AppType = ({
   );
 };
 
-export default SongSubmissionApp;
+export default api.withTRPC(SongSubmissionApp);

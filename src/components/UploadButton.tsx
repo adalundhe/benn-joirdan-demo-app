@@ -41,7 +41,7 @@ export const UploadButton = () => {
         <>
             <label 
                 htmlFor="song-upload-input" 
-                className={`border-b border-b-thin border-b-transparent text-2xl flex items-center justify-center cursor-pointer text-center py-4 dark:text-white text-slate-900`}
+                className={`border-b border-b-thin border-b-transparent text-2xl flex items-center justify-center text-center py-4 dark:text-white text-slate-900 ${fileUploadState === 'UPLOADING' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
             >
                 {
                     fileUploadState === "EMPTY" ?
@@ -77,6 +77,7 @@ export const UploadButton = () => {
                 }
             </label>
             <input 
+                disabled={fileUploadState === 'UPLOADING'}
                 required={true}
                 id="song-upload-input" 
                 name="uploadsong" 

@@ -10,6 +10,7 @@
 const config = {
   reactStrictMode: true,
   publicRuntimeConfig: {
+    STORAGE_MODE: process.env.STORAGE_MODE ?? 'FILESYSTEM',
     CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
     CLOUDFLARE_BUCKET_NAME: process.env.CLOUDFLARE_BUCKET_NAME,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
@@ -26,5 +27,6 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  output: process.env.STORAGE_MODE === 'FILESYSTEM' ? 'standalone' : undefined,
 };
 export default config;
