@@ -115,12 +115,9 @@ const Home: NextPage = () => {
 
   const onSubmit = async () => {
 
-    UPLOAD_STATE.UPLOADING && setFileUploadState(UPLOAD_STATE.UPLOADING)
-    console.log('UPLOAD!', STORAGE_MODE, songName, artistName, song)
+    UPLOAD_STATE.UPLOADING && setFileUploadState(UPLOAD_STATE.UPLOADING);
    
     if (STORAGE_MODE === "SERVERLESS" && songName && artistName && song){
-
-      console.log('AAAA')
       const timestamp = Date.now();
 
       const url = await getSignedUrl(
@@ -136,12 +133,7 @@ const Home: NextPage = () => {
 
       const reader = new FileReader();
 
-
-      console.log('HERE!')
-
       reader.onload = async function() {
-
-        console.log('STARTING!')
 
         if (reader.result instanceof ArrayBuffer){
           const result = write({
@@ -161,8 +153,6 @@ const Home: NextPage = () => {
             
             UPLOAD_STATE.SUCCESS && setFileUploadState(UPLOAD_STATE.SUCCESS);
             FORM_STEPS.SUBMITTED && setCurrentFormStep(FORM_STEPS.SUBMITTED);
-
-            console.log('DONE!')
 
           }
 
