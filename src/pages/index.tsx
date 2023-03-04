@@ -120,7 +120,7 @@ const Home: NextPage = () => {
    
     if (STORAGE_MODE === "SERVERLESS" && songName && artistName && song){
 
-
+      console.log('AAAA')
       const timestamp = Date.now();
 
       const url = await getSignedUrl(
