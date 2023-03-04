@@ -8,7 +8,7 @@ import {
   UPLOAD_STATE
 } from '~/utils/store';
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+// import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
   FormStepDisplay,
   StepButton,
