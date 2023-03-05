@@ -1,4 +1,5 @@
 import { z } from "zod";
+import path from 'path';
 
 /**
  * Specify your server-side environment variables schema here. This way you can ensure the app isn't
@@ -16,6 +17,8 @@ const server = z.object({
 const client = z.object({
 });
 
+
+
 /**
  * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
  * middlewares) or client-side so we need to destruct manually.
@@ -23,7 +26,7 @@ const client = z.object({
  * @type {Record<keyof z.infer<typeof server> | keyof z.infer<typeof client>, string | undefined>}
  */
 const processEnv = {
-  SUBMISSION_STORAGE_PATH: process.env.SUBMISSION_STORAGE_PATH ?? "./",
+  SUBMISSION_STORAGE_PATH: process.env.SUBMISSION_STORAGE_PATH ?? path.join(process.env.PWD ?? ".", '/submissions'),
   NODE_ENV: process.env.NODE_ENV ?? "development"
 };
 
