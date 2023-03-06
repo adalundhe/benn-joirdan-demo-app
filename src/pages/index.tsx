@@ -29,32 +29,32 @@ import { api } from "~/utils/api";
 
 type RuntimeConfig = {
   publicRuntimeConfig: {
-    AWS_ACCESS_KEY_ID: string,
-    AWS_SECRET_ACCESS_KEY: string,
-    CLOUDFLARE_ACCOUNT_ID: string,
-    CLOUDFLARE_BUCKET_NAME: string,
-    STORAGE_MODE: "FILESYSTEM" | "SERVERLESS"
+    NEXT_PUBLIC_AWS_ACCESS_KEY_ID: string,
+    NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY: string,
+    NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID: string,
+    NEXT_PUBLIC_CLOUDFLARE_BUCKET_NAME: string,
+    NEXT_PUBLIC_STORAGE_MODE: "FILESYSTEM" | "SERVERLESS"
   }
 }
 
 const { publicRuntimeConfig } = getConfig() as RuntimeConfig;
 
 const {
-  AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY,
-  CLOUDFLARE_ACCOUNT_ID,
-  CLOUDFLARE_BUCKET_NAME,
-  STORAGE_MODE
+  NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+  NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
+  NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID,
+  NEXT_PUBLIC_CLOUDFLARE_BUCKET_NAME,
+  NEXT_PUBLIC_STORAGE_MODE
 } = publicRuntimeConfig;
 
 
 const s3 = new S3Client({
   region: "auto",
   credentials: {
-    accessKeyId: AWS_ACCESS_KEY_ID,
-    secretAccessKey: AWS_SECRET_ACCESS_KEY
+    accessKeyId: NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+    secretAccessKey: NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY
   },
-  endpoint: `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  endpoint: `https://${NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
 });
 
 
@@ -117,13 +117,13 @@ const Home: NextPage = () => {
 
     UPLOAD_STATE.UPLOADING && setFileUploadState(UPLOAD_STATE.UPLOADING)
    
-    if (STORAGE_MODE === "SERVERLESS" && songName && artistName && song){
+    if (NEXT_PUBLIC_STORAGE_MODE === "SERVERLESS" && songName && artistName && song){
       const timestamp = Date.now();
 
       const url = await getSignedUrl(
         s3,
         new PutObjectCommand({
-          Bucket: CLOUDFLARE_BUCKET_NAME,
+          Bucket: NEXT_PUBLIC_CLOUDFLARE_BUCKET_NAME,
           Key: `${artistName}_${songName}_${timestamp}.mp3`.replaceAll(/\s+/g, '_'),
         }),
         {
