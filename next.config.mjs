@@ -8,6 +8,7 @@
 
 /** @type {import("next").NextConfig} */
 const config = {
+  distDir: "_next",
   reactStrictMode: true,
   publicRuntimeConfig: {
     NEXT_PUBLIC_STORAGE_MODE: process.env.NEXT_PUBLIC_STORAGE_MODE ?? 'FILESYSTEM',
