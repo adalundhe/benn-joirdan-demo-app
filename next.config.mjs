@@ -8,6 +8,8 @@
 
 /** @type {import("next").NextConfig} */
 const config = {
+  basePath: "/submit",
+  assetPrefix: "/submit",
   distDir: "_next",
   reactStrictMode: true,
   publicRuntimeConfig: {
